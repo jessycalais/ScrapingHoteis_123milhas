@@ -1,0 +1,37 @@
+site_name: Web Scraping 123milhas
+repo_url: https://github.com/jessycalais/ScrapingHoteis_123milhas.git
+repo_name: ScrapingHoteis_123milhas
+edit_uri: tree/main/docs
+nav:
+  - Home: index.md
+  - Sobre mim: sobremim.md
+  - Como copiar o repositório: download.md
+  - API:
+    - api/extract.md
+    - api/transform.md
+    - api/load.md
+
+theme:
+  name: material
+  language: pt-BR
+  logo: assets/123milhas.png
+  favicon: assets/123milhas.png
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+
+extra_css:
+  - stylesheets/extra.css
+
+watch:
+  - app
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [webscraping]

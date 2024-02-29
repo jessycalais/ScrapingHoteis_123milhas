@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "webscraping"
+version = "0.1.0"
+description = "Web Scraping de Dados sobre hotéis no site 123milhas.com"
+authors = ["Jéssica Barros <jessyca2.lais.cdb@gmail.com>"]
+readme = "README.md"
+
+[project.urls]
+documentation = 'https://jessycalais.github.io/ScrapingHoteis_123milhas/'
+repository = 'https://github.com/jessycalais/ScrapingHoteis_123milhas.git'
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openpyxl = "^3.1.2"
+selenium = "^4.17.2"
+xlsxwriter = "^3.2.0"
+pandas = "^2.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+blue = "^0.9.1"
+taskipy = "^1.12.2"
+
+
+[tool.poetry.group.doc.dependencies]
+mkdocs-material = "^9.5.10"
+mkdocstrings = "^0.24.0"
+mkdocstrings-python = "^1.8.0"
+pymdown-extensions = "^10.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+run = "python app/main.py"
+
+
