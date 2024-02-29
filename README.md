@@ -30,7 +30,7 @@ Contém o arquivo `.xlsx` gerado após o *web scraping*.
 
 **3) Pasta *docs***  
 Documentação desenvolvida com a biblioteca *mkdocs*.  
-Acesse a documentação em: <a href="https://jessycalais.github.io/ScrapingHoteis_123milhas/" target="_blank"><b>clique aqui</b></a>.
+Acesse a documentação em: <a href="https://jessycalais.github.io/ScrapingHoteis_123milhas/" target="_blank" rel="noopener noreferrer"><b>clique aqui</b></a>.
 
 ---
 ---
