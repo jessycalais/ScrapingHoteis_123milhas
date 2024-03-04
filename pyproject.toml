@@ -16,12 +16,10 @@ selenium = "^4.17.2"
 xlsxwriter = "^3.2.0"
 pandas = "^2.2.1"
 
-
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
 blue = "^0.9.1"
 taskipy = "^1.12.2"
-
 
 [tool.poetry.group.doc.dependencies]
 mkdocs-material = "^9.5.10"
@@ -38,8 +36,6 @@ profile = "black"
 line_length = 79
 
 [tool.taskipy.tasks]
-lint = "blue --check --diff . && isort --check --diff ."
-docs = "mkdocs serve"
-run = "python app/main.py"
-
-
+lint = { cmd = "pylint tests taskipy", help = "confirms code style using pylint" }
+docs = { cmd = "mkdocs serve", help = "starts the mkdocs server" }
+run = { cmd = "python app/main.py", help = "runs the main.py file" }
