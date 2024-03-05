@@ -1,8 +1,9 @@
 # imports de pacotes built-in
-import re
+from re import compile
 
 # imports de pacotes de terceiros
 import pandas as pd
+from pandas import DataFrame
 
 def gerar_tabela_reduzida(dados_gerais) -> pd.core.frame.DataFrame:
     """
@@ -27,7 +28,7 @@ def gerar_tabela_reduzida(dados_gerais) -> pd.core.frame.DataFrame:
             'pontos_fidelidade': dados_gerais[9]
         }
 
-    df = pd.DataFrame(dados)
+    df = DataFrame(dados)
     
     return df
 
@@ -44,18 +45,39 @@ def gerar_tabela_dados(dados_gerais) -> pd.core.frame.DataFrame:
     """
     # Gerar DataFrame reduzido
     df = gerar_tabela_reduzida(dados_gerais)
+    
+    if(not df['diarias_hospedes'].empty):
+        # Expande a tabela
+        cols=['quantidade_de_diarias', 'quantidade_de_hospedes']
+        not_col = 'diarias_hospedes'
+        df['diarias_hospedes'] = df['diarias_hospedes'].astype(str)
 
-    # Expande a tabela
-    df[['quantidade_de_diarias', 'quantidade_de_hospedes']] = df['diarias_hospedes'].str.split(", ", expand=True)
+        # Split the 'diarias_hospedes' column
+        splitted_diarias = df['diarias_hospedes'].str.split(", ", expand=True)
 
-    # Coleta a parte numérica da string usando regex
-    pattern = re.compile('\d+')
-    df['quantidade_de_diarias'] = df['quantidade_de_diarias'].apply(lambda string: pattern.search(string).group())
-    df['quantidade_de_hospedes'] = df['quantidade_de_hospedes'].apply(lambda string: pattern.search(string).group())
+        # Check if the original column is empty
+        if not splitted_diarias.empty:
+            # If not empty, assign the split values to new columns
+            df[cols] = splitted_diarias
+        else:
+            # If empty, assign empty strings to new columns
+            df[cols] = pd.DataFrame([['', '']] * len(df), columns=cols)
 
-    # Altera a ordem das colunas
-    df.insert(8, 'quantidade_de_diarias', df.pop('quantidade_de_diarias'))
-    df.insert(9, 'quantidade_de_hospedes', df.pop('quantidade_de_hospedes'))
+        new_cols = [col for col in df.columns if col != not_col] + cols
+        df = df[new_cols]
+
+        # Coleta a parte numérica da string usando regex
+        pattern = compile('\d+')
+
+        # Aplica a função lambda para extrair a parte numérica da string
+        num_lambda=lambda string: pattern.search(str(string)).group()
+        
+        df['quantidade_de_diarias'] = df['quantidade_de_diarias'].apply(num_lambda)
+        df['quantidade_de_hospedes'] = df['quantidade_de_hospedes'].apply(num_lambda)
+
+        # Altera a ordem das colunas
+        df.insert(8, 'quantidade_de_diarias', df.pop('quantidade_de_diarias'))
+        df.insert(9, 'quantidade_de_hospedes', df.pop('quantidade_de_hospedes'))
 
     return df
     

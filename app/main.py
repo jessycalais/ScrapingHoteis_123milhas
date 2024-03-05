@@ -1,45 +1,27 @@
 # imports de pacotes de terceiros
-import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from os import getcwd
+from asyncio import run as asyncio_run
 
-# imports de pacotes pessoais
-from extract.scraping import Scraping
-from load.gerar_excel import exportar
-from transform.gerar_tabela import gerar_tabela_dados
+from etl.pipeline import aplicar_pipeline
 
-# Parametrizar navegador
-navegador = webdriver.Edge()
-navegador.implicitly_wait(10)
-navegador.maximize_window() 
+def main():
+    n_adultos = 2
+    n_criancas = 0
+    n_bebes = 0
+    duracao = 5
 
-# Instancia da classe Scraping
-scraping = Scraping(navegador) 
+    dia_inicial, mes_inicial, ano_inicial = 1, 5, 2024  
 
-# Lista para receber tabela gerada a cada busca
-dados_gerais = []
+    pasta_raiz = getcwd()+'/data/'
+    radical_nome_arquivo = 'scraping_123milhas'
 
-# Loop para percorrer datas no mês de março
-for dia in range(1, 3):
-    checkin = f'0{dia}-03-2024'
-    checkout = f'0{dia + 1}-03-2024'
+    asyncio_run(
+        aplicar_pipeline(
+            pasta_raiz, radical_nome_arquivo, 
+            n_adultos, n_criancas, n_bebes,
+            dia_inicial, mes_inicial, ano_inicial, duracao
+        )
+    )
 
-    # Navegar até tela inicial da busca    
-    scraping.navegar(2, checkin, checkout)
-
-    # Coletar dados do hotel
-    dados = scraping.coletar_dados()
-
-    # Criação e append de tabelas para unificação
-    dados_diaria = gerar_tabela_dados(dados)
-    dados_diaria.index = [f'{checkin}_{checkout}' for i in range(dados_diaria.shape[0])]
-    dados_gerais.append(dados_diaria)
-
-# Fechar navegador
-navegador.quit()
-
-# Gerar DataFrame unificado
-tabela = pd.concat(dados_gerais)
-
-# Exportar arquivo para o formato '.xlsx'
-exportar(tabela)
+if __name__ == "__main__":
+    main()
